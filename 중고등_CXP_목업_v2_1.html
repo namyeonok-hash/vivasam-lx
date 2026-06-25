@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비바샘 중고등 CXP — 목업</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', 'Helvetica Neue', sans-serif;
+  background: #E8ECF1;
+  color: #1A1A2E;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 40px;
+  font-size: 13px;
+}
+
+/* ── 상단 레이블 ── */
+.top-label {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.top-title { font-size: 11px; font-weight: 700; color: #9CA3AF; letter-spacing: .06em; }
+.step-pills { display: flex; gap: 4px; }
+.step-pill {
+  font-size: 10px; padding: 3px 10px; border-radius: 20px;
+  background: #fff; color: #9CA3AF; border: 1px solid #E5E7EB;
+  cursor: pointer; transition: all .12s;
+}
+.step-pill.active { background: #0D2B55; color: #fff; border-color: #0D2B55; }
+.step-pill.done { background: #E0F2FE; color: #185FA5; border-color: #BAE6FD; }
+
+/* ── 브라우저 크롬 ── */
+.browser {
+  width: 100%;
+  max-width: 860px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+  overflow: hidden;
+}
+
+.b-chrome {
+  background: #F3F4F6;
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #E5E7EB;
+}
+.b-dots { display: flex; gap: 5px; }
+.b-dots span { width: 9px; height: 9px; border-radius: 50%; }
+.d1{background:#FC5F5A;} .d2{background:#FDBC2C;} .d3{background:#35CD4B;}
+.b-url {
+  flex: 1; background: #fff; border-radius: 5px;
+  padding: 4px 10px; font-size: 11px; color: #9CA3AF;
+  border: 1px solid #E5E7EB; text-align: center;
+}
+.b-logo { font-size: 13px; font-weight: 700; color: #0891B2; }
+
+/* ── GNB ── */
+.gnb {
+  background: #0D2B55;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 44px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.gnb-logo { font-size: 14px; font-weight: 700; color: #fff; margin-right: 20px; }
+.gnb-logo span { color: #38BDF8; }
+.gnb-menu { display: flex; }
+.gnb-item {
+  font-size: 12px; color: #7FA8C9;
+  padding: 0 14px; height: 44px;
+  display: flex; align-items: center;
+  cursor: pointer; border-bottom: 2px solid transparent;
+}
+.gnb-item.on { color: #fff; border-bottom-color: #38BDF8; }
+
+/* ── 교과 서브탭 ── */
+.subj-bar {
+  background: #F9FAFB;
+  border-bottom: 1px solid #E5E7EB;
+  padding: 0 20px;
+  display: flex;
+  gap: 0;
+}
+.subj-tab {
+  font-size: 12px; color: #9CA3AF;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: flex; align-items: center; gap: 5px;
+  transition: all .12s;
+  white-space: nowrap;
+}
+.subj-tab:hover { color: #374151; }
+.subj-tab.active { color: #0D2B55; font-weight: 600; border-bottom-color: #0891B2; }
+.subj-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ── 본문 ── */
+.body { padding: 20px; min-height: 440px; }
+
+/* ── 공통 컴포넌트 ── */
+.sec-title {
+  font-size: 13px; font-weight: 700; color: #1A1A2E;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-sub { font-size: 11px; color: #9CA3AF; font-weight: 400; margin-left: 4px; }
+
+/* 단원 그리드 */
+.unit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.unit-card {
+  border-radius: 9px; border: 1.5px solid #E5E7EB;
+  padding: 12px; cursor: pointer; transition: all .12s;
+  background: #fff;
+}
+.unit-card:hover { border-color: #BAE6FD; background: #F0F9FF; }
+.unit-card.sel { border-color: #0891B2; background: #EFF6FF; }
+.uc-num { font-size: 10px; color: #9CA3AF; margin-bottom: 3px; }
+.uc-name { font-size: 12px; font-weight: 600; color: #1A1A2E; margin-bottom: 6px; line-height: 1.4; }
+.uc-tags { display: flex; gap: 3px; flex-wrap: wrap; }
+.uc-tag { font-size: 9px; padding: 1px 6px; border-radius: 8px; }
+.tc { background:#FAEEDA; color:#854F0B; }
+.ts { background:#E0F2FE; color:#185FA5; }
+.tg { background:#EEEDFE; color:#534AB7; }
+
+/* 이력 바 */
+.history-bar {
+  background: #F0FDF9; border-radius: 8px;
+  border: 1px solid #A7F3D0;
+  padding: 9px 13px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.hb-text { font-size: 11px; color: #065F46; }
+.hb-btn {
+  font-size: 10px; padding: 3px 9px; border-radius: 20px;
+  background: #10B981; color: #fff; cursor: pointer;
+  border: none; font-weight: 600;
+}
+
+/* 레이어 탭 전환 */
+.layer-tabs {
+  display: flex; gap: 0;
+  border: 1px solid #E5E7EB; border-radius: 8px;
+  overflow: hidden; margin-bottom: 14px;
+}
+.layer-tab {
+  flex: 1; padding: 8px 6px;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; text-align: center;
+  border-right: 1px solid #E5E7EB;
+  transition: all .12s;
+  background: #fff; color: #9CA3AF;
+}
+.layer-tab:last-child { border-right: none; }
+.layer-tab.lt-c.active { background: #FAEEDA; color: #854F0B; }
+.layer-tab.lt-s.active { background: #E0F2FE; color: #185FA5; }
+.layer-tab.lt-g { color: #9CA3AF; }
+.layer-tab.lt-g:hover { background: #EEEDFE; color: #534AB7; }
+.layer-tab small { display: block; font-size: 9px; font-weight: 400; margin-top: 1px; opacity: .7; }
+
+/* 완성형 목록 */
+.complete-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.c-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 9px;
+  border: 1px solid #E5E7EB; background: #fff;
+  cursor: pointer; transition: all .12s;
+}
+.c-item:hover { border-color: #BAE6FD; background: #F0F9FF; }
+.c-icon {
+  width: 34px; height: 34px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.c-text { flex: 1; min-width: 0; }
+.c-name { font-size: 12px; font-weight: 600; color: #1A1A2E; }
+.c-sub { font-size: 10px; color: #9CA3AF; margin-top: 1px; }
+.c-btns { display: flex; gap: 4px; flex-shrink: 0; }
+.c-btn {
+  font-size: 10px; padding: 3px 8px; border-radius: 5px;
+  border: 1px solid #E5E7EB; background: #F9FAFB;
+  color: #6B7280; cursor: pointer;
+}
+.c-btn.primary { background: #E0F2FE; border-color: #BAE6FD; color: #0C447C; font-weight: 600; }
+
+.c-notice {
+  background: #FEF9EE; border-radius: 8px;
+  border: 1px solid #FDE68A; padding: 9px 12px;
+  font-size: 11px; color: #78350F; line-height: 1.6;
+}
+.c-notice-link { color: #0891B2; cursor: pointer; text-decoration: underline; }
+
+/* 탐색형 */
+.search-wrap { position: relative; margin-bottom: 12px; }
+.search-input {
+  width: 100%; padding: 10px 40px 10px 14px;
+  border-radius: 8px; border: 1.5px solid #0891B2;
+  font-size: 12px; font-family: inherit;
+  outline: none; background: #F0F9FF; color: #1A1A2E;
+}
+.search-input::placeholder { color: #9CA3AF; }
+.search-icon {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px; color: #0891B2;
+}
+
+/* ── 탐색형 v2: 수업 흐름 진입 ── */
+.explore-header {
+  background: #EFF6FF; border: 1px solid #BFDBFE;
+  border-radius: 8px; padding: 9px 12px; margin-bottom: 12px;
+  font-size: 11px; color: #1E40AF; line-height: 1.6;
+}
+.explore-header strong { color: #1D4ED8; }
+
+/* 수업 순간 선택기 */
+.moment-section { margin-bottom: 14px; }
+.moment-label {
+  font-size: 10px; font-weight: 700; color: #6B7280;
+  margin-bottom: 7px; display: flex; align-items: center; gap: 5px;
+}
+.moment-label .ml-step {
+  background: #0891B2; color: #fff;
+  font-size: 9px; padding: 1px 6px; border-radius: 10px;
+}
+.moment-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.moment-card {
+  border: 1.5px solid #E5E7EB; border-radius: 9px;
+  padding: 9px 6px; text-align: center; cursor: pointer;
+  background: #fff; transition: all .15s;
+}
+.moment-card:hover { border-color: #93C5FD; background: #F0F9FF; }
+.moment-card.active {
+  border-color: #0891B2; background: #EFF6FF;
+  box-shadow: 0 0 0 2px #BFDBFE;
+}
+.mc-emoji { font-size: 18px; margin-bottom: 4px; }
+.mc-name { font-size: 10px; font-weight: 700; color: #374151; margin-bottom: 2px; }
+.mc-desc { font-size: 9px; color: #9CA3AF; line-height: 1.4; }
+.moment-card.active .mc-name { color: #1D4ED8; }
+
+/* STEP 2: 수업 목적 + 소요시간 */
+.purpose-section { margin-bottom: 14px; }
+.purpose-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.p-chip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1.5px solid #E5E7EB; background: #fff;
+  font-size: 11px; color: #6B7280; cursor: pointer; transition: all .12s;
+}
+.p-chip:hover { border-color: #93C5FD; color: #185FA5; }
+.p-chip.on {
+  border-color: #0891B2; background: #0891B2; color: #fff; font-weight: 600;
+}
+.p-chip .chip-icon { font-size: 13px; }
+
+.time-row { display: flex; gap: 5px; margin-bottom: 4px; }
+.t-chip {
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid #E5E7EB; background: #fff;
+  font-size: 10px; color: #6B7280; cursor: pointer; transition: all .12s;
+}
+.t-chip:hover { border-color: #BAE6FD; color: #185FA5; }
+.t-chip.on { border-color: #0891B2; background: #E0F2FE; color: #185FA5; font-weight: 600; }
+
+.type-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.ty-chip {
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid #E5E7EB; background: #fff;
+  font-size: 10px; color: #6B7280; cursor: pointer; transition: all .12s;
+}
+.ty-chip:hover { border-color: #E9D8FD; color: #6D28D9; }
+.ty-chip.on { border-color: #7C3AED; background: #EDE9FE; color: #5B21B6; font-weight: 600; }
+
+.filter-divider {
+  display: flex; align-items: center; gap: 8px; margin: 8px 0;
+  font-size: 10px; color: #D1D5DB;
+}
+.filter-divider::before, .filter-divider::after {
+  content: ''; flex: 1; height: 1px; background: #E5E7EB;
+}
+
+/* 결과 영역 */
+.result-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.result-count { font-size: 11px; color: #6B7280; }
+.result-count strong { color: #0891B2; }
+.result-context-badge {
+  font-size: 10px; padding: 2px 9px; border-radius: 10px;
+  background: #E0F2FE; color: #185FA5; border: 1px solid #BAE6FD;
+}
+
+/* 결과 카드 v2 */
+.result-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 10px; }
+.r-item {
+  border-radius: 10px; border: 1.5px solid #E5E7EB; background: #fff;
+  cursor: pointer; transition: all .12s; overflow: hidden;
+}
+.r-item:hover { border-color: #93C5FD; box-shadow: 0 2px 8px rgba(8,145,178,.08); }
+.r-item.hot { border-color: #0891B2; }
+.r-item.expanded { border-color: #0891B2; }
+.r-top {
+  display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+}
+.r-accent { width: 4px; height: 40px; border-radius: 2px; background: #E5E7EB; flex-shrink: 0; }
+.r-item.hot .r-accent { background: #0891B2; }
+.r-item.expanded .r-accent { background: #0891B2; }
+.r-main { flex: 1; min-width: 0; }
+.r-name-row { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+.r-name { font-size: 12px; font-weight: 600; color: #1A1A2E; }
+.r-hot-badge { font-size: 9px; padding: 1px 5px; border-radius: 3px; background: #0891B2; color: #fff; }
+.r-scenario { font-size: 10px; color: #374151; margin-bottom: 3px; line-height: 1.5; }
+.r-meta { display: flex; align-items: center; gap: 8px; }
+.r-tag { font-size: 9px; padding: 1px 7px; border-radius: 8px; }
+.rt-purpose { background: #E0F2FE; color: #185FA5; }
+.rt-time { background: #F3F4F6; color: #6B7280; }
+.rt-type { background: #EDE9FE; color: #5B21B6; }
+.r-users { font-size: 9px; color: #9CA3AF; margin-left: auto; white-space: nowrap; }
+.r-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.r-btn { font-size: 10px; padding: 4px 9px; border-radius: 6px; border: 1px solid #E5E7EB; background: #F9FAFB; color: #6B7280; cursor: pointer; transition: all .1s; }
+.r-btn:hover { background: #E5E7EB; }
+.r-btn.primary { background: #0891B2; border-color: #0891B2; color: #fff; font-weight: 600; }
+.r-btn.primary:hover { background: #0778A0; }
+
+/* 미리보기 드로어 */
+.r-preview {
+  display: none; border-top: 1px solid #E5E7EB;
+  background: #F9FAFB; padding: 10px 14px 12px;
+}
+.r-item.expanded .r-preview { display: block; }
+.preview-title { font-size: 10px; font-weight: 700; color: #9CA3AF; margin-bottom: 8px; display: flex; justify-content: space-between; }
+.preview-thumb {
+  background: #fff; border: 1px solid #E5E7EB; border-radius: 7px;
+  height: 72px; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 8px; position: relative;
+}
+.preview-thumb-inner { font-size: 11px; color: #374151; font-weight: 600; }
+.preview-thumb-label {
+  position: absolute; bottom: 6px; right: 8px;
+  font-size: 9px; color: #9CA3AF;
+}
+.preview-how {
+  background: #EFF6FF; border-radius: 6px; border-left: 3px solid #0891B2;
+  padding: 7px 10px; font-size: 10px; color: #1E40AF; line-height: 1.6;
+  margin-bottom: 8px;
+}
+.preview-how strong { color: #1D4ED8; }
+.preview-btns { display: flex; gap: 6px; }
+.preview-btn { flex: 1; padding: 6px; border-radius: 7px; text-align: center; font-size: 11px; font-weight: 600; cursor: pointer; border: none; }
+.pb-add { background: #0891B2; color: #fff; }
+.pb-studio { background: #0D2B55; color: #fff; }
+
+/* 담은 자료 토스트 */
+.cart-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #0D2B55; color: #fff; border-radius: 10px;
+  padding: 10px 20px; font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  opacity: 0; transition: opacity .2s;
+  pointer-events: none; white-space: nowrap; z-index: 999;
+}
+.cart-toast.show { opacity: 1; pointer-events: auto; }
+.ct-btn { font-size: 11px; padding: 3px 10px; border-radius: 5px; background: #38BDF8; color: #0D2B55; cursor: pointer; font-weight: 700; }
+
+.no-result-tip {
+  text-align: center; padding: 10px;
+  font-size: 11px; color: #9CA3AF;
+  background: #F9FAFB; border-radius: 8px;
+}
+.no-result-tip span { color: #534AB7; cursor: pointer; font-weight: 600; }
+
+/* 기존 호환 유지 */
+.filter-section { margin-bottom: 10px; }
+.filter-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+.filter-label {
+  font-size: 10px; font-weight: 700; color: #9CA3AF;
+  white-space: nowrap; padding-top: 3px; width: 52px; flex-shrink: 0;
+}
+.filter-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.f-tag {
+  font-size: 10px; padding: 3px 10px; border-radius: 20px;
+  border: 1px solid #E5E7EB; background: #fff; color: #6B7280;
+  cursor: pointer; transition: all .12s;
+}
+.f-tag:hover { border-color: #BAE6FD; color: #185FA5; }
+.f-tag.on { border-color: #0891B2; background: #E0F2FE; color: #185FA5; font-weight: 600; }
+.result-header { font-size: 11px; color: #6B7280; margin-bottom: 8px; }
+.result-header strong { color: #0891B2; }
+.r-sub { font-size: 10px; color: #9CA3AF; }
+.r-btns { display: flex; gap: 4px; flex-shrink: 0; }
+
+/* 수업 스튜디오 */
+.studio-flow {
+  display: flex; gap: 4px; align-items: center;
+  margin-bottom: 14px; overflow-x: auto; padding-bottom: 2px;
+}
+.sf-step {
+  font-size: 11px; padding: 5px 12px; border-radius: 6px;
+  background: #F3F4F6; color: #9CA3AF; white-space: nowrap;
+  cursor: pointer; transition: all .12s;
+}
+.sf-step.cur { background: #0D2B55; color: #fff; font-weight: 600; }
+.sf-step:hover:not(.cur) { background: #E5E7EB; }
+.sf-arrow { font-size: 12px; color: #D1D5DB; flex-shrink: 0; }
+
+.studio-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; }
+
+.studio-main { background: #F9FAFB; border-radius: 9px; padding: 12px; }
+.sm-label { font-size: 10px; color: #9CA3AF; margin-bottom: 8px; font-weight: 600; }
+.slide-thumb {
+  background: #fff; border: 1px solid #E5E7EB; border-radius: 7px;
+  height: 100px; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 8px; flex-direction: column; gap: 4px;
+}
+.slide-thumb-title { font-size: 12px; font-weight: 600; color: #374151; }
+.slide-thumb-sub { font-size: 10px; color: #9CA3AF; }
+.slide-minis { display: flex; gap: 4px; margin-bottom: 10px; }
+.s-mini {
+  flex: 1; height: 26px; border-radius: 4px;
+  border: 1px solid #E5E7EB; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: #9CA3AF; cursor: pointer;
+}
+.s-mini.cur { border-color: #0891B2; color: #0891B2; font-weight: 700; }
+.studio-acts { display: flex; gap: 6px; }
+.sa-btn {
+  flex: 1; padding: 7px 8px; border-radius: 7px;
+  border: 1px solid #E5E7EB; background: #fff;
+  font-size: 11px; color: #374151; cursor: pointer;
+  text-align: center; transition: all .12s;
+}
+.sa-btn:hover { border-color: #BAE6FD; background: #F0F9FF; }
+.sa-btn.gen { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; font-weight: 600; }
+.sa-btn.gen:hover { background: #E0DEFE; }
+
+.studio-side { display: flex; flex-direction: column; gap: 8px; }
+.ss-card { background: #fff; border-radius: 9px; border: 1px solid #E5E7EB; padding: 10px 12px; }
+.ss-label { font-size: 10px; color: #9CA3AF; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.ss-link {
+  background: #F9FAFB; border-radius: 5px;
+  padding: 5px 8px; font-size: 10px; color: #6B7280;
+  font-family: monospace; margin-bottom: 6px;
+}
+.ss-btn {
+  width: 100%; padding: 6px; border-radius: 6px;
+  background: #0891B2; color: #fff;
+  font-size: 11px; font-weight: 700; border: none; cursor: pointer;
+}
+.insight-card {
+  background: #EAF3DE; border-radius: 9px;
+  border: 1px solid #97C459; padding: 10px 12px;
+}
+.ic-label { font-size: 10px; font-weight: 700; color: #27500A; margin-bottom: 4px; }
+.ic-text { font-size: 11px; color: #3B6D11; line-height: 1.6; }
+
+/* 배포 */
+.deploy-box { background: #F9FAFB; border-radius: 9px; border: 1px solid #E5E7EB; padding: 14px; margin-bottom: 12px; }
+.deploy-title { font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 10px; }
+.link-row {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border: 1.5px solid #E5E7EB; border-radius: 7px;
+  padding: 8px 12px; margin-bottom: 8px;
+}
+.link-text { flex: 1; font-size: 11px; color: #6B7280; font-family: monospace; }
+.copy-btn {
+  font-size: 10px; padding: 4px 12px; border-radius: 5px;
+  background: #0891B2; color: #fff; border: none; cursor: pointer; font-weight: 600;
+}
+.share-opts { display: flex; gap: 6px; }
+.share-opt {
+  flex: 1; padding: 7px; border-radius: 7px;
+  border: 1px solid #E5E7EB; text-align: center;
+  font-size: 11px; color: #6B7280; cursor: pointer; background: #fff;
+}
+.share-opt:hover { border-color: #BAE6FD; color: #185FA5; }
+.live-status {
+  background: #F0FDF9; border-radius: 9px; border: 1px solid #A7F3D0;
+  padding: 12px 14px;
+}
+.ls-count { font-size: 20px; font-weight: 700; color: #065F46; margin-bottom: 3px; }
+.ls-sub { font-size: 11px; color: #6B7280; }
+
+/* 대시보드 */
+.dash-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.dash-card { background: #fff; border-radius: 9px; border: 1px solid #E5E7EB; padding: 12px 14px; }
+.dc-label { font-size: 10px; color: #9CA3AF; margin-bottom: 4px; }
+.dc-val { font-size: 22px; font-weight: 700; color: #1A1A2E; }
+.dc-sub { font-size: 10px; color: #6B7280; margin-top: 2px; }
+.err-box { background: #FEF2F2; border-radius: 9px; border: 1px solid #FECACA; padding: 12px 14px; }
+.eb-title { font-size: 12px; font-weight: 700; color: #991B1B; margin-bottom: 10px; }
+.err-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.err-lbl { font-size: 11px; color: #374151; width: 120px; flex-shrink: 0; }
+.err-track { flex: 1; height: 6px; background: #E5E7EB; border-radius: 3px; overflow: hidden; }
+.err-fill { height: 100%; border-radius: 3px; background: #EF4444; }
+.err-fill.ok { background: #10B981; }
+.err-cnt { font-size: 11px; font-weight: 700; color: #991B1B; width: 28px; text-align: right; }
+.err-cnt.ok { color: #065F46; }
+
+/* 다음 수업 */
+.next-box { background: #0D2B55; border-radius: 9px; padding: 14px 16px; margin-bottom: 12px; }
+.nb-label { font-size: 10px; color: #7FA8C9; margin-bottom: 6px; }
+.nb-q { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.6; }
+.nb-sub { font-size: 11px; color: #9CA3AF; margin-top: 6px; }
+.asset-box {
+  background: #EFF6FF; border-radius: 9px;
+  border: 1px solid #BFDBFE; padding: 12px 14px;
+}
+.ab-title { font-size: 12px; font-weight: 700; color: #1D4ED8; margin-bottom: 6px; }
+.ab-body { font-size: 11px; color: #374151; line-height: 1.8; }
+
+/* ── 하단 네비 ── */
+.nav-area {
+  width: 100%; max-width: 860px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px;
+}
+.nav-prev {
+  padding: 8px 18px; border-radius: 7px;
+  border: 1.5px solid #E5E7EB; background: #fff;
+  font-size: 12px; font-weight: 600; color: #6B7280; cursor: pointer;
+}
+.nav-next {
+  padding: 8px 22px; border-radius: 7px;
+  border: none; background: #0D2B55;
+  font-size: 12px; font-weight: 700; color: #fff; cursor: pointer;
+}
+.nav-steps { font-size: 11px; color: #9CA3AF; }
+</style>
+</head>
+<body>
+
+<!-- 담기 토스트 -->
+<div class="cart-toast" id="cartToast">
+  📥 <span class="ct-name"></span> — 수업 스튜디오에 담겼어요
+  <span class="ct-btn" onclick="go(2)">수업 스튜디오로 →</span>
+</div>
+
+<!-- 상단 레이블 -->
+<div class="top-label">
+  <div class="top-title">비바샘 중고등 CXP — 화면 목업</div>
+  <div class="step-pills" id="stepPills"></div>
+</div>
+
+<!-- 브라우저 목업 -->
+<div class="browser">
+  <div class="b-chrome">
+    <div class="b-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+    <div class="b-url" id="burl">v.vivasam.com</div>
+    <div class="b-logo">VIVASAM</div>
+  </div>
+  <div class="gnb">
+    <div class="gnb-logo">비바샘 <span>중고등</span></div>
+    <div class="gnb-menu">
+      <div class="gnb-item on" id="gnbActive">내 교과서</div>
+      <div class="gnb-item">문제은행</div>
+      <div class="gnb-item">에듀테크 테마관</div>
+    </div>
+  </div>
+  <div class="subj-bar" id="subjBar"></div>
+  <div class="body" id="mainBody"></div>
+</div>
+
+<!-- 하단 네비 -->
+<div class="nav-area">
+  <button class="nav-prev" onclick="prev()">← 이전</button>
+  <div class="nav-steps" id="navSteps"></div>
+  <button class="nav-next" onclick="next()" id="navNext">다음 →</button>
+</div>
+
+<script>
+// ── 데이터 ──
+const SUBJECTS = [
+  { id:'math',   name:'수학',       color:'#1D4E89', layer:'생성형+탐색형' },
+  { id:'korean', name:'국어',       color:'#7C3AED', layer:'탐색형+완성형' },
+  { id:'social', name:'사회·역사',  color:'#0D9488', layer:'완성형+탐색형' },
+  { id:'sci',    name:'과학',       color:'#059669', layer:'탐색형' },
+  { id:'eng',    name:'영어·예체능',color:'#D97706', layer:'생성형+완성형' },
+];
+
+const STEPS = [
+  '단원 선택',
+  '자료 탐색',
+  '수업 스튜디오',
+  '학생 배포',
+  '피드백 대시보드',
+  '다음 수업 연결',
+];
+
+const DATA = {
+  math: {
+    book: '공통수학1 (김원경)',
+    units: [
+      { num:'I',   name:'다항식',        tags:['완성형','탐색형','생성형'] },
+      { num:'II',  name:'방정식과 부등식', tags:['완성형','탐색형'] },
+      { num:'III', name:'경우의 수',      tags:['완성형'] },
+      { num:'IV',  name:'행렬',          tags:['탐색형','생성형'] },
+    ],
+    history: '지난 학기 — 스마트PPT + 기울기 조작카드 2종 사용',
+    completes: [
+      { icon:'📋', bg:'#E0F2FE', name:'스마트 PPT', sub:'다항식 · 1~3차시 · 수업 흐름 완결' },
+      { icon:'📖', bg:'#E0F2FE', name:'스마트 교과서 WEB', sub:'인터랙티브 포함 · 바로 열람' },
+      { icon:'📄', bg:'#F3F4F6', name:'수업 지도안', sub:'지도서 기반 · 차시별 설계 참고' },
+      { icon:'📝', bg:'#F3F4F6', name:'형성평가 문항 세트', sub:'상·중·하 난이도 · 단원 전체' },
+    ],
+    purposeTags: ['도입용','개념 설명용','학생 활동용','형성평가용','마무리용'],
+    timeTags: ['5~10분','15분','한 수업 전체'],
+    typeTags: ['조작형 콘텐츠','그래프 시각화','문제 세트','영상','활동지'],
+    results: [
+      { name:'일차함수 기울기 슬라이더', sub:'도입용 · 5~10분 · 조작형 콘텐츠', hot:true },
+      { name:'일차함수 실생활 사례 PPT', sub:'도입용 · 15분 · 활동지' },
+      { name:'기울기·절편 탐구 활동지', sub:'학생 활동용 · 15분 · 활동지' },
+      { name:'형성평가 5문항 세트', sub:'형성평가용 · 5~10분 · 문제 세트' },
+    ],
+    moments: [
+      { emoji:'🌅', name:'도입', desc:'흥미·동기 유발', key:'intro' },
+      { emoji:'💡', name:'개념 설명', desc:'핵심 개념 전달', key:'concept' },
+      { emoji:'✏️', name:'학생 활동', desc:'직접 풀기·탐구', key:'activity' },
+      { emoji:'📝', name:'형성평가', desc:'이해도 확인', key:'assess' },
+      { emoji:'🏁', name:'마무리', desc:'정리·연결', key:'close' },
+    ],
+    purposeChips: {
+      intro:    [{ icon:'🎯', label:'흥미 유발' },{ icon:'🔗', label:'실생활 연결' },{ icon:'🤔', label:'발문 열기' }],
+      concept:  [{ icon:'📐', label:'개념 시각화' },{ icon:'🔢', label:'단계별 풀이' },{ icon:'🎬', label:'개념 영상' }],
+      activity: [{ icon:'🖐', label:'조작·탐구' },{ icon:'👥', label:'모둠 활동' },{ icon:'🔎', label:'오류 분석' }],
+      assess:   [{ icon:'⚡', label:'빠른 퀴즈' },{ icon:'📊', label:'수준별 문항' },{ icon:'🔁', label:'오답 재도전' }],
+      close:    [{ icon:'🗂', label:'핵심 정리' },{ icon:'➡️', label:'다음 차시 연결' }],
+    },
+    resultCards: {
+      intro: [
+        { name:'기울기 실생활 사례 — 경사도 슬라이더', scenario:'수업 시작 3분, 경사도 조작으로 "기울기가 뭔지" 직관을 만든다.', purpose:'흥미 유발', time:'5~10분', type:'조작형', users:31, hot:true,
+          preview:'슬라이더를 드래그하면 경사도↔기울기 값이 동시에 변화. 실제 도로 사진 배경.', how:'<strong>도입 시나리오</strong>: "이 도로 기울기는 얼마일까?" → 학생들이 슬라이더를 조작해 직접 확인 → "그래서 기울기가 뭔지 알겠어?" 발문으로 연결' },
+        { name:'일차함수 개념 발문 카드 세트', scenario:'교사가 말하기 전에 학생이 먼저 생각하게 만드는 도입 발문 5종.', purpose:'발문 열기', time:'5~10분', type:'활동지', users:18,
+          preview:'발문 카드 5종: "y가 x에 따라 변하는 관계를 뭐라 부를까?", "직선이 가파를수록…" 등', how:'<strong>도입 시나리오</strong>: 카드를 모둠에 배포 → 1분 토의 → 대표 발표 → 교사 개념 정리로 연결' },
+      ],
+      concept: [
+        { name:'기울기·절편 그래프 시각화 도구', scenario:'a, b 값을 바꾸면 그래프가 실시간으로 변하는 인터랙티브 개념 시각화.', purpose:'개념 시각화', time:'15분', type:'조작형', users:44, hot:true,
+          preview:'y=ax+b 그래프. a 슬라이더: 기울기 변화 / b 슬라이더: y절편 이동. 음수 구간 강조 표시.', how:'<strong>개념 설명 시나리오</strong>: 교사가 빔 투사 → a를 음수로 변경해 "기울기 부호 혼동"을 선제 차단 → 학생 개별 조작으로 이어짐' },
+      ],
+      activity: [
+        { name:'기울기 부호 오류 진단 탐구 활동지', scenario:'지난 수업 오답 패턴(기울기 부호 혼동 9명)을 겨냥한 맞춤 활동지.', purpose:'오류 분석', time:'15분', type:'활동지', users:12, hot:true,
+          preview:'3단계 구성: 1) 오류 예시 보고 틀린 곳 찾기 2) 올바른 풀이 직접 써보기 3) 비슷한 문제 2개 도전', how:'<strong>활동 시나리오</strong>: 지난 수업 피드백 데이터 연계 → "지난번에 이게 많이 틀렸어" 안내 → 개별 활동 → 오답 원인 발표' },
+      ],
+      assess: [
+        { name:'형성평가 5문항 — 상·중·하 자동 분기', scenario:'제출과 동시에 수준별로 다음 문항이 분기되는 스마트 평가.', purpose:'수준별 문항', time:'5~10분', type:'문제 세트', users:27, hot:true,
+          preview:'문항 1~2: 기본 / 문항 3: 분기점 (기울기 부호) / 맞으면 심화 / 틀리면 재도전 문항으로', how:'<strong>평가 시나리오</strong>: 샘퀴즈 배포 → 실시간 결과 대시보드 → 수업 스튜디오의 "오류 패턴"으로 자동 저장' },
+      ],
+      close: [
+        { name:'단원 핵심 정리 — 일차함수 마인드맵', scenario:'수업 마지막 5분, 학생이 직접 채워 완성하는 핵심 정리 자료.', purpose:'핵심 정리', time:'5~10분', type:'활동지', users:9,
+          preview:'빈칸 마인드맵: 기울기·절편·y=ax+b 관계를 학생이 채움. PDF + 디지털 입력 양쪽 지원.', how:'<strong>마무리 시나리오</strong>: 개별 완성 → 옆 친구와 비교 → "다음 차시 예고: 두 직선의 교점은?" 발문으로 연결' },
+      ],
+    },
+    studioFlow: ['도입','개념 설명','학생 활동','형성평가','마무리'],
+    slideTitle: '일차함수의 기울기',
+    deployUrl: 'vivasam.com/s/xK7m2',
+    insight: '지난 수업: 기울기 부호 혼동 9명 → 이번 도입 집중',
+    errors: [
+      { lbl:'기울기 부호 혼동', pct:75, cnt:'9명' },
+      { lbl:'y절편 위치 오류', pct:42, cnt:'5명' },
+      { lbl:'정답 처리', pct:83, cnt:'10명', ok:true },
+    ],
+    nextQ: '"기울기가 음수면 그래프가 어느 방향으로 기울까?"',
+    nextSub: '기울기 부호 혼동 9명 → 다음 도입 발문 자동 추천',
+  },
+  korean: {
+    book: '문학 (박현숙)',
+    units: [
+      { num:'I',   name:'문학의 이해',   tags:['탐색형','완성형'] },
+      { num:'II',  name:'소설 읽기',     tags:['탐색형'] },
+      { num:'III', name:'시와 화자',     tags:['완성형','탐색형'] },
+      { num:'IV',  name:'수행평가 연계', tags:['생성형'] },
+    ],
+    history: '지난 학기 — 문학 아카이브 + 발문 세트 3종 활용',
+    completes: [
+      { icon:'📋', bg:'#E0F2FE', name:'본문 연계 PPT', sub:'핵심 정리 + 형성평가 일체형' },
+      { icon:'✅', bg:'#F0FDF9', name:'저자진 검수 자료', sub:'원문 표기 오류 검증 완료' },
+      { icon:'📝', bg:'#F3F4F6', name:'수준별 문제 세트', sub:'상·중·하 · 단원별 일괄 제공' },
+      { icon:'📄', bg:'#F3F4F6', name:'수행평가 채점 기준', sub:'기준표 + 예시 답안 포함' },
+    ],
+    purposeTags: ['도입용','작품 감상용','발문 활동용','수행평가용','정리용'],
+    timeTags: ['5~10분','15분','한 수업 전체'],
+    typeTags: ['작품 자료','발문 세트','영상','활동지','평가 자료'],
+    results: [
+      { name:'이상의 날개 — 작가 연보·작품 해설', sub:'도입용 · 5~10분 · 작품 자료', hot:true },
+      { name:'날개 주제 발문 세트 (3종)', sub:'발문 활동용 · 15분 · 발문 세트' },
+      { name:'심리 묘사 분석 활동지', sub:'학생 활동용 · 15분 · 활동지' },
+      { name:'근대 소설 비교 감상 자료', sub:'작품 감상용 · 한 수업 전체 · 작품 자료' },
+    ],
+    moments: [
+      { emoji:'📖', name:'작품 도입', desc:'작가·배경 소개', key:'intro' },
+      { emoji:'🔍', name:'본문 읽기', desc:'구조·표현 분석', key:'concept' },
+      { emoji:'💬', name:'발문 토론', desc:'해석·감상 활동', key:'activity' },
+      { emoji:'✍️', name:'형성평가', desc:'이해도 확인', key:'assess' },
+      { emoji:'🏁', name:'정리', desc:'핵심 정리', key:'close' },
+    ],
+    purposeChips: {
+      intro:    [{ icon:'🎭', label:'작가·시대 배경' },{ icon:'🎬', label:'영상 도입' },{ icon:'🤔', label:'주제 예상 발문' }],
+      concept:  [{ icon:'🔍', label:'표현 분석' },{ icon:'📐', label:'구조 파악' },{ icon:'✅', label:'검수 자료 연계' }],
+      activity: [{ icon:'💬', label:'토론 발문' },{ icon:'📝', label:'감상문 쓰기' },{ icon:'👥', label:'모둠 해석' }],
+      assess:   [{ icon:'⚡', label:'핵심 확인 퀴즈' },{ icon:'📊', label:'수준별 문항' }],
+      close:    [{ icon:'🗂', label:'핵심 정리' },{ icon:'➡️', label:'다음 작품 연결' }],
+    },
+    resultCards: {
+      intro: [
+        { name:'이상의 날개 — 작가 연보·작품 해설 카드', scenario:'수업 시작 5분, 이상의 생애와 시대 배경을 카드 형식으로 소개.', purpose:'작가·시대 배경', time:'5~10분', type:'작품 자료', users:23, hot:true,
+          preview:'작가 사진·연보·당시 사회 배경 이미지 카드 8종. 저자진 검수 완료, 원문 오기 없음.', how:'<strong>도입 시나리오</strong>: 카드를 모둠에 배포 → "이 작가는 왜 이 작품을 썼을까?" 발문 → 본문 읽기로 자연 연결' },
+      ],
+      concept: [
+        { name:'날개 심리 묘사 — 표현 분석 활동지', scenario:'서술자 시점과 심리 묘사 기법을 본문 구절과 함께 분석하는 구조적 활동지.', purpose:'표현 분석', time:'15분', type:'활동지', users:15, hot:true,
+          preview:'핵심 구절 발췌(검수 완료) + 표현 기법 분류표 + 학생 직접 추가 구절 찾기 칸', how:'<strong>분석 시나리오</strong>: 본문 읽기 후 배포 → 밑줄 + 기법 라벨링 → "화자 시점 혼동"을 지면에서 해결' },
+      ],
+      activity: [
+        { name:'날개 주제 발문 세트 3종', scenario:'해석이 엇갈리는 지점을 의도적으로 만들어 토론을 유발하는 발문 카드.', purpose:'토론 발문', time:'15분', type:'발문 세트', users:19,
+          preview:'발문 3종: "날개가 돋고 싶다는 것은 도피인가 성장인가?", "이 소설의 서술자를 신뢰할 수 있는가?" 등', how:'<strong>토론 시나리오</strong>: 각 모둠이 발문 1종 선택 → 찬반 토론 → 전체 공유' },
+      ],
+      assess: [
+        { name:'소설 이해 확인 퀴즈 — 5문항', scenario:'화자 시점, 심리 묘사, 상징을 골고루 확인하는 구조화 퀴즈.', purpose:'핵심 확인 퀴즈', time:'5~10분', type:'문제 세트', users:11,
+          preview:'객관 3 + 단답 2 구성. 화자 시점 혼동 오류 특화 문항 포함.', how:'<strong>평가 시나리오</strong>: 샘퀴즈 배포 → 결과를 수업 스튜디오 인사이트로 자동 저장' },
+      ],
+      close: [
+        { name:'근대 소설 비교 — 핵심 정리 카드', scenario:'날개와 다른 근대 소설을 비교해 단원 전체를 정리하는 마무리 자료.', purpose:'핵심 정리', time:'5~10분', type:'작품 자료', users:7,
+          preview:'이상 날개 vs 김동인 감자 — 서술 시점·심리 묘사·결말 방식 3축 비교 표', how:'<strong>마무리 시나리오</strong>: 비교표 채우기 → "다음 시간 수행평가 예고" CTA로 연결' },
+      ],
+    },
+    studioFlow: ['작품 도입','본문 읽기','발문 토론','형성평가','정리'],
+    slideTitle: '이상의 날개 — 심리 묘사',
+    deployUrl: 'vivasam.com/s/kR4p9',
+    insight: '지난 수업: 화자 시점 혼동 8명 → 이번 도입 집중',
+    errors: [
+      { lbl:'화자 시점 혼동', pct:68, cnt:'8명' },
+      { lbl:'상징 해석 오류', pct:35, cnt:'4명' },
+      { lbl:'정답 처리', pct:75, cnt:'9명', ok:true },
+    ],
+    nextQ: '"날개가 돋고 싶다는 표현이 의미하는 것은?"',
+    nextSub: '화자 시점 혼동 8명 → 시점 확인 활동 추가 추천',
+  },
+  social: {
+    book: '역사 (이한별)',
+    units: [
+      { num:'I',   name:'세계사 근대',   tags:['탐색형','완성형'] },
+      { num:'II',  name:'동아시아사',    tags:['완성형'] },
+      { num:'III', name:'사료 기반 탐구', tags:['탐색형','생성형'] },
+      { num:'IV',  name:'현대 사회 변화', tags:['완성형','탐색형'] },
+    ],
+    history: '지난 학기 — 산업혁명 지도 편집본 + 사료 3종 활용',
+    completes: [
+      { icon:'🗺', bg:'#F0FDF9', name:'교과서 지도 이미지 (편집가능)', sub:'텍스트 삭제·레이블 수정 가능' },
+      { icon:'📋', bg:'#E0F2FE', name:'스마트 PPT', sub:'단원 전체 · 수업 흐름 완결' },
+      { icon:'📜', bg:'#F3F4F6', name:'사료 라이브러리', sub:'출처 검증 완료 · 비상 자산 연계' },
+      { icon:'📄', bg:'#F3F4F6', name:'활동 사례집', sub:'동료 교사 수업 재구성 사례' },
+    ],
+    purposeTags: ['도입용','사료 탐구용','지도 활동용','모둠 토론용','정리용'],
+    timeTags: ['5~10분','15분','한 수업 전체'],
+    typeTags: ['사료','지도 이미지','영상','활동지','사례집'],
+    results: [
+      { name:'산업혁명 도시화 지도 (레이블 편집가능)', sub:'지도 활동용 · 15분 · 지도 이미지', hot:true },
+      { name:'산업혁명 1차 사료 3종 (출처 검증)', sub:'사료 탐구용 · 15분 · 사료' },
+      { name:'공장 노동자 생활 도입 영상', sub:'도입용 · 5~10분 · 영상' },
+      { name:'동료 교사 역사 모둠 수업 사례집', sub:'모둠 토론용 · 한 수업 전체 · 사례집' },
+    ],
+    moments: [
+      { emoji:'🌅', name:'도입', desc:'문제 의식 유발', key:'intro' },
+      { emoji:'🗺', name:'지도 탐구', desc:'공간·지리 분석', key:'concept' },
+      { emoji:'📜', name:'사료 분석', desc:'1차 사료 읽기', key:'activity' },
+      { emoji:'💬', name:'모둠 토론', desc:'해석·논쟁', key:'assess' },
+      { emoji:'🏁', name:'정리', desc:'핵심 정리', key:'close' },
+    ],
+    purposeChips: {
+      intro:    [{ icon:'🎬', label:'도입 영상' },{ icon:'🤔', label:'핵심 질문' },{ icon:'🗺', label:'배경 지도' }],
+      concept:  [{ icon:'🗺', label:'편집 가능 지도' },{ icon:'📍', label:'장소 레이블' },{ icon:'📊', label:'변화 비교' }],
+      activity: [{ icon:'📜', label:'1차 사료' },{ icon:'🔍', label:'출처 분석' },{ icon:'📝', label:'탐구 활동지' }],
+      assess:   [{ icon:'💬', label:'모둠 논쟁' },{ icon:'🗳', label:'입장 투표' }],
+      close:    [{ icon:'🗂', label:'핵심 정리' },{ icon:'➡️', label:'현대 연결' }],
+    },
+    resultCards: {
+      intro: [
+        { name:'산업혁명 공장 노동자 생활 영상 (3분)', scenario:'수업 시작의 문제 의식: "왜 사람들이 도시로 몰렸는가?"', purpose:'도입 영상', time:'5~10분', type:'영상', users:28, hot:true,
+          preview:'실제 사진·삽화 기반 3분 영상. 공장·주거·아동노동 장면 포함. 교사 정지 포인트 3곳 자막 표시.', how:'<strong>도입 시나리오</strong>: 영상 시청 → "가장 충격적인 장면은?" 1분 토의 → 지도 탐구로 연결' },
+      ],
+      concept: [
+        { name:'산업혁명 도시화 지도 — 레이블 편집 가능', scenario:'강·공장·노동자 주거지를 직접 레이블링하며 공간 구조를 파악한다.', purpose:'편집 가능 지도', time:'15분', type:'지도 이미지', users:22, hot:true,
+          preview:'영국 맨체스터 1850년대 지도. 빈 레이블 10개. 교사 버전(정답)과 학생 버전(빈칸) 세트.', how:'<strong>지도 시나리오</strong>: 모둠별 빈 지도 배포 → 레이블 채우기 → 교사 정답 지도와 비교 → "공장이 강 근처에 모인 이유?" 발문' },
+      ],
+      activity: [
+        { name:'산업혁명 1차 사료 3종 세트 (출처 검증)', scenario:'노동자·자본가·의회 보고서 3가지 시각으로 당시를 재구성한다.', purpose:'1차 사료', time:'15분', type:'사료', users:17,
+          preview:'① 노동자 수기 발췌 ② 공장주 편지 ③ 아동노동 의회 조사 보고서. 각 출처·번역 검증 완료.', how:'<strong>사료 시나리오</strong>: 모둠별 1종씩 배당 → 핵심 주장 찾기 → 3가지 시각 종합 토론' },
+      ],
+      assess: [
+        { name:'역사 논쟁 — 산업혁명 "득인가 실인가" 입장 투표', scenario:'수업 막바지, 배운 내용을 바탕으로 입장을 정해 논거를 제시하는 구조적 토론.', purpose:'입장 투표', time:'15분', type:'활동지', users:13,
+          preview:'찬반 입장 카드 + 논거 메모 공간. 투표 집계 슬라이드(실시간 결과 시각화).', how:'<strong>토론 시나리오</strong>: 개인 입장 결정(2분) → 같은 입장끼리 모여 논거 정리 → 반대 입장에 반박' },
+      ],
+      close: [
+        { name:'산업혁명 핵심 개념 정리 카드', scenario:'오늘 수업의 핵심 키워드를 학생이 직접 채워 완성하는 정리 자료.', purpose:'핵심 정리', time:'5~10분', type:'활동지', users:8,
+          preview:'키워드 카드 6종(도시화, 공장제, 프롤레타리아 등) + 연결선 채우기 맵', how:'<strong>마무리 시나리오</strong>: 개별 완성 → 짝 비교 → "다음 시간: 이 변화가 동아시아에 미친 영향" 예고' },
+      ],
+    },
+    studioFlow: ['사료 도입','지도 탐구','모둠 토론','발표','정리'],
+    slideTitle: '산업혁명과 도시 변화',
+    deployUrl: 'vivasam.com/s/sH2r5',
+    insight: '지난 수업: 지역 위치 혼동 7명 → 지도 재확인 필요',
+    errors: [
+      { lbl:'지역 위치 혼동', pct:60, cnt:'7명' },
+      { lbl:'시대 순서 오류', pct:45, cnt:'5명' },
+      { lbl:'정답 처리', pct:70, cnt:'8명', ok:true },
+    ],
+    nextQ: '"공장이 주로 강 근처에 세워진 이유는?"',
+    nextSub: '지역 위치 혼동 7명 → 지도 활동 추가 추천',
+  },
+  sci: {
+    book: '과학 (고희지)',
+    units: [
+      { num:'I',   name:'물질의 구성',  tags:['탐색형'] },
+      { num:'II',  name:'힘과 운동',   tags:['탐색형','완성형'] },
+      { num:'III', name:'화학 반응',   tags:['탐색형','생성형'] },
+      { num:'IV',  name:'생명과 유전', tags:['완성형'] },
+    ],
+    history: '지난 학기 — 가상실험실 + 데이터 시각화 활용',
+    completes: [
+      { icon:'🧪', bg:'#F0FDF9', name:'가상실험실 — 화학 반응 (22개정)', sub:'학생 직접 조작 · 탐구 가능' },
+      { icon:'📊', bg:'#E0F2FE', name:'이미지·그래프 편집 툴', sub:'레이블 수정 · 배경 정리' },
+      { icon:'📋', bg:'#F3F4F6', name:'스마트 PPT', sub:'단원 전체 · 수업 흐름 완결' },
+      { icon:'📄', bg:'#F3F4F6', name:'실험 보고서 양식', sub:'데이터 입력 → 그래프 자동 생성' },
+    ],
+    purposeTags: ['도입용','가상실험용','탐구 활동용','데이터 분석용','정리용'],
+    timeTags: ['5~10분','15분','한 수업 전체'],
+    typeTags: ['가상실험실','이미지·그래프','영상','활동지','보고서 양식'],
+    results: [
+      { name:'산화·환원 반응 가상실험실 (22개정)', sub:'가상실험용 · 한 수업 전체 · 가상실험실', hot:true },
+      { name:'산화·환원 반응 흥미유발 영상', sub:'도입용 · 5~10분 · 영상' },
+      { name:'전자 이동 그래프 편집 자료', sub:'탐구 활동용 · 15분 · 이미지·그래프' },
+      { name:'실험 데이터 → 자동 그래프 보고서', sub:'데이터 분석용 · 15분 · 보고서 양식' },
+    ],
+    moments: [
+      { emoji:'🔬', name:'현상 도입', desc:'흥미·문제 인식', key:'intro' },
+      { emoji:'🧪', name:'가상실험', desc:'직접 조작·탐구', key:'concept' },
+      { emoji:'📊', name:'데이터 정리', desc:'결과 기록·분석', key:'activity' },
+      { emoji:'💬', name:'분석 토론', desc:'원리 해석', key:'assess' },
+      { emoji:'🏁', name:'정리', desc:'개념 정리', key:'close' },
+    ],
+    purposeChips: {
+      intro:    [{ icon:'🎬', label:'현상 영상' },{ icon:'🤔', label:'예측 발문' },{ icon:'🧲', label:'실물 시연' }],
+      concept:  [{ icon:'🧪', label:'가상실험실' },{ icon:'🔢', label:'변인 조작' },{ icon:'📈', label:'실시간 그래프' }],
+      activity: [{ icon:'📊', label:'데이터 기록' },{ icon:'📝', label:'보고서 작성' },{ icon:'🔍', label:'오류 분석' }],
+      assess:   [{ icon:'⚡', label:'개념 확인 퀴즈' },{ icon:'💬', label:'원리 발표' }],
+      close:    [{ icon:'🗂', label:'핵심 정리' },{ icon:'➡️', label:'다음 차시 연결' }],
+    },
+    resultCards: {
+      intro: [
+        { name:'산화·환원 반응 흥미유발 영상 (4분)', scenario:'사과가 갈변하고 철이 녹스는 일상 현상으로 산화 개념을 직관적으로 연다.', purpose:'현상 영상', time:'5~10분', type:'영상', users:35, hot:true,
+          preview:'일상 현상 사례(사과 갈변, 철 부식, 폭죽) 4분. 각 장면 정지 발문 타임스탬프 표시.', how:'<strong>도입 시나리오</strong>: 영상 시청 → "이 현상들의 공통점은?" 발문 → 가상실험으로 연결' },
+      ],
+      concept: [
+        { name:'산화·환원 반응 가상실험실 (22개정)', scenario:'전자 이동을 시각화하며 산화·환원을 직접 조작해 발견하게 한다.', purpose:'가상실험실', time:'한 수업 전체', type:'가상실험실', users:41, hot:true,
+          preview:'반응물 선택 → 전자 이동 애니메이션 → 산화수 변화 자동 표시. 22개정 교육과정 반영.', how:'<strong>실험 시나리오</strong>: 개별 조작(10분) → 모둠 데이터 비교 → "산화수가 낮아지면?" 발문으로 개념 정리' },
+      ],
+      activity: [
+        { name:'실험 데이터 자동 그래프 보고서', scenario:'학생이 수치를 입력하면 그래프가 자동 생성되는 디지털 보고서 양식.', purpose:'데이터 기록', time:'15분', type:'보고서 양식', users:19,
+          preview:'엑셀형 입력 → 꺾은선·막대 그래프 자동 생성 → PDF 출력. 산화수 변화 그래프 템플릿 포함.', how:'<strong>기록 시나리오</strong>: 가상실험 데이터 입력 → 그래프 패턴 관찰 → "산화수 증가=산화" 규칙 발견' },
+      ],
+      assess: [
+        { name:'산화·환원 개념 확인 퀴즈 — 5문항', scenario:'산화수 계산 오류(8명)와 전자 이동 혼동(6명)을 겨냥한 진단 퀴즈.', purpose:'개념 확인 퀴즈', time:'5~10분', type:'문제 세트', users:16,
+          preview:'전자 이동 방향 그리기 2문 + 산화수 계산 2문 + 산화/환원 판별 1문.', how:'<strong>평가 시나리오</strong>: 샘퀴즈 배포 → 실시간 오답 패턴 확인 → 다음 수업 도입 자동 추천' },
+      ],
+      close: [
+        { name:'산화·환원 핵심 개념 마인드맵', scenario:'전자 이동→산화수→산화/환원 흐름을 학생이 직접 채워 완성.', purpose:'핵심 정리', time:'5~10분', type:'활동지', users:10,
+          preview:'전자 이동 방향 그림 + 빈칸 개념 카드. "잃으면 산화, 얻으면 환원" 기억 장치 포함.', how:'<strong>마무리 시나리오</strong>: 개별 완성 → 옆 친구 확인 → 다음 차시 "산화수 계산 응용" 예고' },
+      ],
+    },
+    studioFlow: ['현상 도입','가상실험','데이터 정리','분석 토론','정리'],
+    slideTitle: '산화·환원 반응 탐구',
+    deployUrl: 'vivasam.com/s/cE8n3',
+    insight: '지난 수업: 산화수 계산 오류 8명 → 전자 이동 집중',
+    errors: [
+      { lbl:'산화수 계산 오류', pct:70, cnt:'8명' },
+      { lbl:'전자 이동 혼동', pct:50, cnt:'6명' },
+      { lbl:'정답 처리', pct:65, cnt:'8명', ok:true },
+    ],
+    nextQ: '"전자를 잃는 쪽이 산화인가, 환원인가?"',
+    nextSub: '산화수 계산 오류 8명 → 전자 이동 개념 재확인',
+  },
+  eng: {
+    book: '중학 영어 (손지민)',
+    units: [
+      { num:'I',   name:'의사소통 기능',    tags:['완성형','생성형'] },
+      { num:'II',  name:'문법 집중',        tags:['완성형','탐색형'] },
+      { num:'III', name:'Writing 활동',     tags:['생성형'] },
+      { num:'IV',  name:'Speaking 수행평가', tags:['생성형','탐색형'] },
+    ],
+    history: '지난 학기 — AI 피드백 엔진 + 회화 이미지 세트 활용',
+    completes: [
+      { icon:'📚', bg:'#FAEEDA', name:'문법 올인원 패키지', sub:'관계대명사 등 교육과정 기준' },
+      { icon:'📋', bg:'#E0F2FE', name:'스마트 PPT', sub:'단원 전체 · 수업 흐름 완결' },
+      { icon:'🎧', bg:'#F3F4F6', name:'수준별 듣기 자료', sub:'상·중·하 난이도 분류' },
+      { icon:'📝', bg:'#F3F4F6', name:'Writing 수행평가 기준표', sub:'채점 기준 + 예시 답안' },
+    ],
+    purposeTags: ['도입용','문법 연습용','회화 활동용','Writing 수행용','정리용'],
+    timeTags: ['5~10분','15분','한 수업 전체'],
+    typeTags: ['문법 패키지','회화 이미지','영상','활동지','평가 자료'],
+    results: [
+      { name:'관계대명사 올인원 문법 패키지', sub:'문법 연습용 · 15분 · 문법 패키지', hot:true },
+      { name:'관계대명사 게임형 PPT', sub:'문법 연습용 · 15분 · 문법 패키지' },
+      { name:'인물 묘사 회화 상황 이미지 세트', sub:'회화 활동용 · 15분 · 회화 이미지' },
+      { name:'Writing 피드백 AI 초안 자료', sub:'Writing 수행용 · 한 수업 전체 · 평가 자료' },
+    ],
+    moments: [
+      { emoji:'🎯', name:'도입 활동', desc:'흥미·맥락 연결', key:'intro' },
+      { emoji:'📐', name:'본 활동', desc:'문법·표현 학습', key:'concept' },
+      { emoji:'✍️', name:'쓰기/말하기', desc:'Writing·Speaking', key:'activity' },
+      { emoji:'💬', name:'피드백', desc:'AI·교사 피드백', key:'assess' },
+      { emoji:'🏁', name:'마무리', desc:'정리·연결', key:'close' },
+    ],
+    purposeChips: {
+      intro:    [{ icon:'🎬', label:'상황 영상' },{ icon:'🤔', label:'실생활 연결' },{ icon:'🎮', label:'게임형 도입' }],
+      concept:  [{ icon:'📐', label:'문법 패턴 연습' },{ icon:'🔢', label:'오류 수정' },{ icon:'📊', label:'수준별 문항' }],
+      activity: [{ icon:'✍️', label:'Writing 피드백' },{ icon:'🗣', label:'Speaking 연습' },{ icon:'👥', label:'페어 활동' }],
+      assess:   [{ icon:'🤖', label:'AI 피드백' },{ icon:'📊', label:'채점 기준 연계' }],
+      close:    [{ icon:'🗂', label:'핵심 정리' },{ icon:'➡️', label:'수행평가 연결' }],
+    },
+    resultCards: {
+      intro: [
+        { name:'관계대명사 실생활 상황 게임형 PPT', scenario:'학생들이 답을 맞추는 퀴즈 형식으로 관계대명사 개념을 먼저 경험한다.', purpose:'게임형 도입', time:'5~10분', type:'문법 패키지', users:26, hot:true,
+          preview:'OX 퀴즈 5문 + 빈칸 채우기 게임. 학생 참여 슬라이드 클릭으로 정답 애니메이션.', how:'<strong>도입 시나리오</strong>: 팀별 게임 → "왜 who/which가 다를까?" 발문 → 본 활동 연결' },
+      ],
+      concept: [
+        { name:'관계대명사 who / which 오류 수정 패턴 연습', scenario:'선행사 누락(6명)과 관계대명사 선택 오류(8명) 집중 교정 연습.', purpose:'오류 수정', time:'15분', type:'문법 패키지', users:21, hot:true,
+          preview:'오류 문장 10개 → 틀린 곳 찾기 → 올바른 문장 다시 쓰기. 오류 유형별 해설 포함.', how:'<strong>문법 시나리오</strong>: 개별 오류 찾기(5분) → 짝 비교(3분) → 교사 전체 해설 → AI 피드백으로 연결' },
+      ],
+      activity: [
+        { name:'Writing 초안 — AI 피드백 연계 활동지', scenario:'학생이 쓴 초안에 AI가 관계대명사 오류를 즉시 체크해 피드백한다.', purpose:'Writing 피드백', time:'한 수업 전체', type:'평가 자료', users:14,
+          preview:'빈 초안 양식 + AI 피드백 수신 코드. 오류 위치 하이라이트 + 수정 제안 3종.', how:'<strong>Writing 시나리오</strong>: 초안 작성(15분) → AI 피드백 수령 → 수정(10분) → 교사 최종 확인' },
+      ],
+      assess: [
+        { name:'관계대명사 수행평가 AI 채점 기준표', scenario:'Writing 수행평가 채점 기준을 AI가 초안 단계부터 실시간 안내.', purpose:'AI 피드백', time:'한 수업 전체', type:'평가 자료', users:9,
+          preview:'채점 기준 4항목 + 예시 답안 상·중·하. AI 채점 결과와 교사 최종 채점 비교 가능.', how:'<strong>평가 시나리오</strong>: 학생에게 기준표 사전 공유 → 작성 중 AI 피드백 → 최종 교사 채점' },
+      ],
+      close: [
+        { name:'관계대명사 핵심 정리 카드', scenario:'who / which / that 구분과 선행사 확인 루틴을 한 장으로 정리.', purpose:'핵심 정리', time:'5~10분', type:'활동지', users:12,
+          preview:'플로우차트: 선행사 확인 → who/which/that 선택 → 문장 완성. 앞면 규칙, 뒷면 연습 문제.', how:'<strong>마무리 시나리오</strong>: 개별 완성 → 짝 확인 → 수행평가 일정 안내로 연결' },
+      ],
+    },
+    studioFlow: ['도입 활동','본 활동','Writing/Speaking','피드백','마무리'],
+    slideTitle: '관계대명사 who / which',
+    deployUrl: 'vivasam.com/s/eN6w1',
+    insight: '지난 수업: 관계대명사 선택 오류 8명 → 선행사 집중',
+    errors: [
+      { lbl:'관계대명사 선택 오류', pct:65, cnt:'8명' },
+      { lbl:'선행사 누락', pct:48, cnt:'6명' },
+      { lbl:'정답 처리', pct:60, cnt:'7명', ok:true },
+    ],
+    nextQ: '"사람을 꾸밀 때와 사물을 꾸밀 때 어떻게 다를까?"',
+    nextSub: '관계대명사 선택 오류 8명 → 선행사 확인 활동 추가',
+  },
+};
+
+let curSubj = 0;
+let curStep = 0;
+let curLayer2 = 'complete';
+
+// 교과 탭
+function buildSubjBar() {
+  document.getElementById('subjBar').innerHTML = SUBJECTS.map((s,i) =>
+    `<div class="subj-tab${i===curSubj?' active':''}"
+      style="${i===curSubj?'border-bottom-color:'+s.color+';color:'+s.color+';':''}"
+      onclick="switchSubj(${i})">
+      <div class="subj-dot" style="background:${s.color}"></div>${s.name}
+    </div>`
+  ).join('');
+}
+
+// 단계 pills
+function buildPills() {
+  document.getElementById('stepPills').innerHTML = STEPS.map((s,i) =>
+    `<div class="step-pill${i===curStep?' active':i<curStep?' done':''}"
+      onclick="go(${i})">${i+1}. ${s}</div>`
+  ).join('');
+  document.getElementById('navSteps').textContent = `${curStep+1} / ${STEPS.length}`;
+  document.getElementById('navNext').textContent = curStep < STEPS.length-1 ? '다음 →' : '처음으로 ↺';
+}
+
+function switchSubj(i) {
+  curSubj = i; curStep = 0; curLayer2 = 'complete';
+  curMoment = null; curPurpose = null; expandedCard = null;
+  buildSubjBar(); buildPills(); render();
+}
+function switchLayer(l) {
+  curLayer2 = l;
+  if(l === 'search') { curMoment = null; curPurpose = null; expandedCard = null; }
+  render();
+}
+function go(n) { curStep = n; buildPills(); render(); }
+function next() {
+  if(curStep < STEPS.length-1) { curStep++; }
+  else { curStep = 0; }
+  curLayer2 = 'complete';
+  buildPills(); render();
+}
+function prev() {
+  if(curStep > 0) { curStep--; buildPills(); render(); }
+}
+function filterTag(el) {
+  const p = el.closest('.filter-tags');
+  p.querySelectorAll('.f-tag').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function render() {
+  const s = SUBJECTS[curSubj];
+  const d = DATA[s.id];
+  document.getElementById('burl').textContent =
+    `v.vivasam.com / ${s.name} / ${d.book}${curStep>0?' / '+STEPS[curStep]:''}`;
+  document.getElementById('gnbActive').textContent = s.name + ' 수업';
+
+  const body = document.getElementById('mainBody');
+
+  // ── STEP 0: 단원 선택
+  if(curStep === 0) {
+    body.innerHTML = `
+      <div class="sec-title">📚 ${d.book} — 단원을 선택하세요</div>
+      <div class="unit-grid">
+        ${d.units.map((u,i)=>`
+          <div class="unit-card${i===0?' sel':''}" onclick="go(1)">
+            <div class="uc-num">${u.num}</div>
+            <div class="uc-name">${u.name}</div>
+            <div class="uc-tags">${u.tags.map(t=>`<span class="uc-tag ${t==='완성형'?'tc':t==='탐색형'?'ts':'tg'}">${t}</span>`).join('')}</div>
+          </div>`).join('')}
+      </div>
+      <div class="history-bar">
+        <div class="hb-text">📌 ${d.history}</div>
+        <button class="hb-btn">수업 이력 보기</button>
+      </div>`;
+
+  // ── STEP 1: 자료 탐색 (완성형 / 탐색형)
+  } else if(curStep === 1) {
+    body.innerHTML = `
+      <div class="sec-title">${d.units[0].name} — 자료 탐색
+        <span class="sec-sub">집중 레이어: ${s.layer}</span>
+      </div>
+      <div class="layer-tabs">
+        <div class="layer-tab lt-c${curLayer2==='complete'?' active':''}" onclick="switchLayer('complete')">
+          📦 완성형 <small>바로 열어서 씀</small>
+        </div>
+        <div class="layer-tab lt-s${curLayer2==='search'?' active':''}" onclick="switchLayer('search')">
+          🔍 탐색형 <small>수업 목적으로 찾기</small>
+        </div>
+        <div class="layer-tab lt-g" onclick="go(2)" style="flex:.7;">
+          ✨ 생성형 → <small>AI로 만들기</small>
+        </div>
+      </div>
+      <div id="layerContent"></div>`;
+    renderLayer(d);
+
+  // ── STEP 2: 수업 스튜디오
+  } else if(curStep === 2) {
+    body.innerHTML = `
+      <div class="sec-title">🎨 수업 스튜디오 — ${d.units[0].name} 1수업</div>
+      <div class="studio-flow">
+        ${d.studioFlow.map((st,i)=>`
+          <div class="sf-step${i===0?' cur':''}">${st}</div>
+          ${i<d.studioFlow.length-1?'<div class="sf-arrow">→</div>':''}`).join('')}
+      </div>
+      <div class="studio-grid">
+        <div class="studio-main">
+          <div class="sm-label">도입 — 현재 자료</div>
+          <div class="slide-thumb">
+            <div class="slide-thumb-title">${d.slideTitle}</div>
+            <div class="slide-thumb-sub">스마트 PPT · 1 / 12 슬라이드</div>
+          </div>
+          <div class="slide-minis">
+            <div class="s-mini cur">1</div>
+            <div class="s-mini">2</div>
+            <div class="s-mini">3</div>
+            <div class="s-mini">+9</div>
+          </div>
+          <div class="studio-acts">
+            <div class="sa-btn" onclick="switchLayer('search');go(1)">🔍 목적별 탐색</div>
+            <div class="sa-btn gen">✨ AI 생성</div>
+          </div>
+        </div>
+        <div class="studio-side">
+          <div class="ss-card">
+            <div class="ss-label">👥 학생 배포</div>
+            <div style="font-size:11px;color:#374151;margin-bottom:6px;">닉네임 입력으로 간편 참여</div>
+            <div class="ss-link">${d.deployUrl}</div>
+            <button class="ss-btn" onclick="go(3)">링크 배포하기 →</button>
+          </div>
+          <div class="insight-card">
+            <div class="ic-label">📊 지난 수업 인사이트</div>
+            <div class="ic-text">${d.insight}</div>
+          </div>
+        </div>
+      </div>`;
+
+  // ── STEP 3: 학생 배포
+  } else if(curStep === 3) {
+    body.innerHTML = `
+      <div class="sec-title">🔗 학생 배포 — 닉네임 간편 참여</div>
+      <div class="deploy-box">
+        <div class="deploy-title">배포 링크</div>
+        <div class="link-row">
+          <div class="link-text">${d.deployUrl}</div>
+          <button class="copy-btn">복사</button>
+        </div>
+        <div class="share-opts">
+          <div class="share-opt">QR 코드</div>
+          <div class="share-opt">카카오톡</div>
+          <div class="share-opt">구글 클래스룸</div>
+        </div>
+      </div>
+      <div class="live-status">
+        <div class="ic-label" style="color:#065F46;">실시간 접속 현황</div>
+        <div class="ls-count">22명 / 24명 접속 중</div>
+        <div class="ls-sub">닉네임 기반 식별 · 활동 완료 후 피드백 대시보드로 연결</div>
+      </div>`;
+
+  // ── STEP 4: 피드백 대시보드
+  } else if(curStep === 4) {
+    body.innerHTML = `
+      <div class="sec-title">📊 피드백 대시보드 — ${d.units[0].name} 수업 결과</div>
+      <div class="dash-row">
+        <div class="dash-card"><div class="dc-label">참여 학생</div><div class="dc-val">22명</div><div class="dc-sub">/ 24명 전체</div></div>
+        <div class="dash-card"><div class="dc-label">평균 점수</div><div class="dc-val">73점</div><div class="dc-sub">지난 수업 대비 +5점</div></div>
+      </div>
+      <div class="err-box">
+        <div class="eb-title">오류 패턴 분석</div>
+        ${d.errors.map(e=>`
+          <div class="err-row">
+            <div class="err-lbl">${e.lbl}</div>
+            <div class="err-track"><div class="err-fill${e.ok?' ok':''}" style="width:${e.pct}%"></div></div>
+            <div class="err-cnt${e.ok?' ok':''}">${e.cnt}</div>
+          </div>`).join('')}
+      </div>`;
+
+  // ── STEP 5: 다음 수업 연결
+  } else if(curStep === 5) {
+    body.innerHTML = `
+      <div class="sec-title">🔄 다음 수업 연결 — 오늘이 내일로 이어집니다</div>
+      <div class="next-box">
+        <div class="nb-label">AI 추천 — 다음 수업 도입 발문</div>
+        <div class="nb-q">${d.nextQ}</div>
+        <div class="nb-sub">${d.nextSub}</div>
+      </div>
+      <div class="asset-box">
+        <div class="ab-title">✅ 이 수업이 자산으로 쌓였어요</div>
+        <div class="ab-body">오늘 수업 데이터가 저장되었습니다.<br>
+        다음에 같은 단원을 열면 오늘의 수업 이력과 인사이트가 보입니다.<br>
+        <span style="color:#9CA3AF;">도구 → 습관 → 정체성 — 쓸수록 비바샘이 내 수업을 알아갑니다.</span></div>
+      </div>`;
+  }
+}
+
+// ── 탐색형 v2 상태 ──
+let curMoment = null;   // 선택된 수업 순간 key
+let curPurpose = null;  // 선택된 수업 목적
+let expandedCard = null; // 펼쳐진 결과 카드 인덱스
+
+function renderLayer(d) {
+  const el = document.getElementById('layerContent');
+  if(!el) return;
+  if(curLayer2 === 'complete') {
+    el.innerHTML = `
+      <div style="background:#FFFBEB;border:.5px solid #FDE68A;border-radius:7px;padding:8px 11px;margin-bottom:10px;font-size:11px;color:#78350F;">
+        📦 비바샘이 단원별로 묶어서 드립니다. 그냥 열어서 바로 쓰세요.
+      </div>
+      <div class="complete-list">
+        ${d.completes.map(c=>`
+          <div class="c-item" onclick="go(2)">
+            <div class="c-icon" style="background:${c.bg}">${c.icon}</div>
+            <div class="c-text">
+              <div class="c-name">${c.name}</div>
+              <div class="c-sub">${c.sub}</div>
+            </div>
+            <div class="c-btns">
+              <button class="c-btn primary">열기</button>
+              <button class="c-btn">다운로드</button>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="c-notice">
+        💡 <strong>인터뷰 교사 100%가 "그대로 쓰지 않는다"고 답했습니다.</strong>
+        수업에 더 맞는 자료가 필요하다면
+        <span class="c-notice-link" onclick="switchLayer('search')">탐색형으로 전환 →</span>
+      </div>`;
+  } else {
+    renderExplore(d);
+  }
+}
+
+function renderExplore(d) {
+  const el = document.getElementById('layerContent');
+  if(!el) return;
+
+  // 현재 선택된 moment
+  const momentData = d.moments;
+  const selMoment = momentData.find(m => m.key === curMoment);
+
+  // 선택된 목적 기반 결과 카드 가져오기
+  const resultCards = curMoment && d.resultCards[curMoment] ? d.resultCards[curMoment] : [];
+
+  // purpose chips 목록
+  const purposeChips = curMoment && d.purposeChips[curMoment] ? d.purposeChips[curMoment] : [];
+
+  el.innerHTML = `
+    <div class="explore-header">
+      🔍 기존 자료실과 다릅니다. <strong>자료 유형이 아닌 수업 목적 기준</strong>으로 찾아드려요.
+    </div>
+
+    <!-- STEP 1: 수업 순간 선택 -->
+    <div class="moment-section">
+      <div class="moment-label">
+        <span class="ml-step">1단계</span>
+        지금 어떤 수업 순간을 준비하고 있나요?
+      </div>
+      <div class="moment-cards">
+        ${momentData.map(m=>`
+          <div class="moment-card${curMoment===m.key?' active':''}" onclick="selectMoment('${m.key}')">
+            <div class="mc-emoji">${m.emoji}</div>
+            <div class="mc-name">${m.name}</div>
+            <div class="mc-desc">${m.desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    ${curMoment ? `
+    <!-- STEP 2: 수업 목적 선택 -->
+    <div class="purpose-section">
+      <div class="moment-label">
+        <span class="ml-step">2단계</span>
+        ${selMoment ? selMoment.name : ''} 단계에서 이 자료로 무엇을 하려고 하나요?
+      </div>
+      <div class="purpose-row">
+        ${purposeChips.map(p=>`
+          <div class="p-chip${curPurpose===p.label?' on':''}" onclick="selectPurpose('${p.label}')">
+            <span class="chip-icon">${p.icon}</span>${p.label}
+          </div>`).join('')}
+      </div>
+      <div class="filter-divider">소요 시간</div>
+      <div class="time-row">
+        ${d.timeTags.map((t,i)=>`<span class="t-chip${i===0?' on':''}" onclick="toggleChip(this,'.time-row .t-chip')">${t}</span>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <!-- 결과 -->
+    ${curMoment ? `
+    <div class="result-bar">
+      <div class="result-count">
+        <strong>${resultCards.length}개</strong> 자료
+        ${curPurpose ? `— "${curPurpose}" 기준` : `— "${selMoment ? selMoment.name : ''}" 기준`}
+      </div>
+      ${curPurpose ? `<div class="result-context-badge">✅ ${curPurpose}</div>` : ''}
+    </div>
+    <div class="result-list" id="exploreResults">
+      ${resultCards.map((r, i) => renderResultCard(r, i)).join('')}
+    </div>
+    <div class="no-result-tip">
+      원하는 자료가 없다면 → <span onclick="go(2)">✨ AI로 새로 만들기</span>
+    </div>` : `
+    <div style="text-align:center;padding:24px 0;color:#9CA3AF;font-size:12px;">
+      위에서 수업 순간을 선택하면 맞춤 자료가 나타납니다.
+    </div>`}
+  `;
+}
+
+function renderResultCard(r, i) {
+  const isExpanded = expandedCard === i;
+  return `
+    <div class="r-item${r.hot?' hot':''}${isExpanded?' expanded':''}" id="rcard-${i}">
+      <div class="r-top" onclick="toggleCard(${i})">
+        <div class="r-accent"></div>
+        <div class="r-main">
+          <div class="r-name-row">
+            <div class="r-name">${r.name}</div>
+            ${r.hot?'<span class="r-hot-badge">추천</span>':''}
+          </div>
+          <div class="r-scenario">${r.scenario}</div>
+          <div class="r-meta">
+            <span class="r-tag rt-purpose">${r.purpose}</span>
+            <span class="r-tag rt-time">⏱ ${r.time}</span>
+            <span class="r-tag rt-type">${r.type}</span>
+            <span class="r-users">👤 지금 ${r.users}명 사용 중</span>
+          </div>
+        </div>
+        <div class="r-actions">
+          <button class="r-btn" onclick="event.stopPropagation();addToCart('${r.name}')">담기</button>
+          <button class="r-btn primary" onclick="event.stopPropagation();toggleCard(${i})">${isExpanded?'닫기':'미리보기'}</button>
+        </div>
+      </div>
+      <div class="r-preview">
+        <div class="preview-title">
+          <span>📄 자료 미리보기</span>
+          <span style="color:#0891B2;cursor:pointer;" onclick="toggleCard(${i})">닫기 ✕</span>
+        </div>
+        <div class="preview-thumb">
+          <div class="preview-thumb-inner">${r.name}</div>
+          <div class="preview-thumb-label">축소 미리보기</div>
+        </div>
+        <div class="preview-how">${r.how}</div>
+        <div class="preview-btns">
+          <button class="preview-btn pb-add" onclick="addToCart('${r.name}')">📥 수업 스튜디오에 담기</button>
+          <button class="preview-btn pb-studio" onclick="go(2)">🎨 바로 수업 스튜디오로 →</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function selectMoment(key) {
+  curMoment = key; curPurpose = null; expandedCard = null;
+  renderExplore(DATA[SUBJECTS[curSubj].id]);
+}
+function selectPurpose(label) {
+  curPurpose = curPurpose === label ? null : label;
+  expandedCard = null;
+  renderExplore(DATA[SUBJECTS[curSubj].id]);
+}
+function toggleChip(el, selector) {
+  document.querySelectorAll(selector).forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+}
+function toggleCard(i) {
+  expandedCard = expandedCard === i ? null : i;
+  renderExplore(DATA[SUBJECTS[curSubj].id]);
+}
+function addToCart(name) {
+  const t = document.getElementById('cartToast');
+  t.querySelector('.ct-name').textContent = name;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// 초기화
+buildSubjBar();
+buildPills();
+render();
+</script>
+</body>
+</html>
