@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비바샘 중고등 CXP — 세부 기획 검증 v2.3</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', sans-serif; background: #E8ECF1; color: #1A1A2E;
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  padding: 24px 16px; font-size: 13px;
+}
+.top-label { width: 100%; max-width: 1100px; display: flex; justify-content: space-between; margin-bottom: 12px; }
+.top-title { font-size: 11px; font-weight: 700; color: #9CA3AF; letter-spacing: .06em; }
+
+/* ── 브라우저 크롬 (1100px 확장형 와이드 뷰) ── */
+.browser {
+  width: 100%; max-width: 1100px; background: #fff; border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13); overflow: hidden; display: flex; flex-direction: column;
+}
+.b-chrome { background: #F3F4F6; padding: 9px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #E5E7EB; }
+.b-dots { display: flex; gap: 5px; }
+.b-dots span { width: 9px; height: 9px; border-radius: 50%; }
+.d1{background:#FC5F5A;} .d2{background:#FDBC2C;} .d3{background:#35CD4B;}
+.b-url { flex: 1; background: #fff; border-radius: 5px; padding: 4px 10px; font-size: 11px; color: #9CA3AF; border: 1px solid #E5E7EB; text-align: center; }
+
+/* GNB */
+.gnb { background: #0D2B55; padding: 0 20px; display: flex; align-items: center; height: 44px; }
+.gnb-logo { font-size: 14px; font-weight: 700; color: #fff; margin-right: 20px; }
+.gnb-logo span { color: #38BDF8; }
+.gnb-item { font-size: 12px; color: #7FA8C9; padding: 0 14px; height: 44px; display: flex; align-items: center; cursor: pointer; }
+.gnb-item.on { color: #fff; border-bottom: 2px solid #38BDF8; }
+
+/* 메인 레이아웃 분할 구도 */
+.workspace { display: flex; min-height: 550px; background: #F8FAFC; position: relative; }
+.main-panel { flex: 1.2; padding: 20px; background: #fff; border-right: 1px solid #E2E8F0; transition: all 0.3s; }
+.detail-panel { flex: 0; width: 0; background: #F8FAFC; overflow: hidden; transition: flex 0.25s ease, padding 0.25s ease; padding: 0; position: relative; }
+.detail-panel.open { flex: 0.9; width: auto; padding: 20px; border-left: 1px solid #CBD5E1; background: #F1F5F9; }
+
+/* 단원/필터 UI */
+.sec-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+.unit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; }
+.unit-card { border-radius: 8px; border: 1.5px solid #E5E7EB; padding: 10px; cursor: pointer; background: #fff; }
+.unit-card.sel { border-color: #0891B2; background: #EFF6FF; }
+.uc-name { font-size: 11px; font-weight: 600; }
+
+/* 수업 순간 칩 */
+.moment-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+.moment-btn { background: #fff; border: 1.5px solid #E2E8F0; border-radius: 6px; padding: 8px 4px; text-align: center; cursor: pointer; }
+.moment-btn.active { border-color: #0891B2; background: #F0F9FF; }
+
+/* 결과 리스트 */
+.ins-card { border: 1.5px solid #E2E8F0; border-radius: 8px; background: #fff; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+.ins-card:hover { border-color: #0891B2; }
+.ins-card.active-item { border-color: #0891B2; background: #F0F9FF; box-shadow: 0 2px 8px rgba(8,145,178,0.1); }
+.ins-main { padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+.ins-title { font-size: 12px; font-weight: 700; color: #1E293B; }
+.ins-go-btn { font-size: 11px; color: #0891B2; font-weight: 600; background: none; border: none; cursor: pointer; }
+
+/* ── [세부 페이지 기획 핵심] 상세 정보 패널 내 구조 ── */
+.dt-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px; }
+.dt-title { font-size: 14px; font-weight: 700; color: #0F172A; }
+.dt-close { background: #E2E8F0; border: none; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px; }
+
+.dt-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+.dt-meta-item { background: #fff; padding: 8px; border-radius: 6px; border: 1px solid #E2E8F0; }
+.dt-meta-lbl { font-size: 10px; color: #94A3B8; margin-bottom: 2px; }
+.dt-meta-val { font-size: 11px; font-weight: 600; color: #334155; }
+
+/* 세부 기획 분할 탭 */
+.dt-tabs { display: flex; gap: 4px; background: #E2E8F0; padding: 2px; border-radius: 6px; margin-bottom: 12px; }
+.dt-tab { flex: 1; text-align: center; padding: 6px 2px; font-size: 11px; font-weight: 600; color: #64748B; cursor: pointer; border-radius: 4px; }
+.dt-tab.on { background: #fff; color: #0F172A; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+.dt-content-box { background: #fff; border-radius: 8px; padding: 12px; border: 1px solid #CBD5E1; min-height: 16px; margin-bottom: 14px; }
+.dt-section-title { font-size: 11px; font-weight: 700; color: #0891B2; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+
+/* 하단 세부 조작 액션 영역 */
+.dt-action-card { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px; padding: 10px; }
+.dt-flex-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 6px; }
+.dt-select { padding: 4px 6px; font-size: 11px; border-radius: 4px; border: 1px solid #CBD5E1; background:#fff; }
+.dt-submit-btn { background: #0D2B55; color: #fff; border: none; padding: 6px 12px; font-size: 11px; font-weight: 600; border-radius: 4px; cursor: pointer; }
+
+/* 토스트 */
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1E293B; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 11px; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.toast.active { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="top-label">
+  <div class="top-title">비바샘 CXP — 목적별 탐색 세부 페이지(상세 레이어) 분할 기획안 v2.3</div>
+</div>
+
+<div class="browser">
+  <div class="b-chrome">
+    <div class="b-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+    <div class="b-url">vivasam.com/cxp/explore-workspace</div>
+  </div>
+  <div class="gnb">
+    <div class="gnb-logo">비바샘 <span>CXP</span></div>
+    <div class="gnb-item">교과서 수업</div>
+    <div class="gnb-item on">수업 목적별 탐색실</div>
+  </div>
+
+  <!-- 메인 이원화 워크스페이스 -->
+  <div class="workspace">
+    
+    <!-- 왼쪽 마스터 패널 (메인 리스트) -->
+    <div class="main-panel">
+      <div class="sec-title">🎯 대단원 선택</div>
+      <div class="unit-grid">
+        <div class="unit-card"><div class="uc-name">Ⅰ-1. 소인수분해</div></div>
+        <div class="unit-card sel"><div class="uc-name">Ⅰ-2. 정수와 유리수</div></div>
+        <div class="unit-card"><div class="uc-name">Ⅱ-1. 문자의 사용</div></div>
+        <div class="unit-card"><div class="uc-name">Ⅱ-2. 일차방정식</div></div>
+      </div>
+
+      <div class="sec-title">🚀 수업 순간 설정</div>
+      <div class="moment-row">
+        <div class="moment-btn active"><div>도입/동기유발</div></div>
+        <div class="moment-btn"><div>개념 전개</div></div>
+        <div class="moment-btn"><div>학생 활동</div></div>
+        <div class="moment-btn"><div>정리/평가</div></div>
+      </div>
+
+      <div class="sec-title" style="margin-top:16px;">📋 추천 목적 시나리오 리스트 <span style="font-weight:400; font-size:10px; color:#94A3B8; margin-left:6px;">(클릭 시 우측 세부 기획창 오픈)</span></div>
+      <div class="instruction-list">
+        <div class="ins-card" id="card-1" onclick="openDetailPage(1)">
+          <div class="ins-main">
+            <div>
+              <div class="ins-title">영하의 날씨와 통장 잔고로 이해하는 양수와 음수 직관 매칭</div>
+              <div style="font-size:10px; color:#64748B; margin-top:3px;">포맷: 인터랙티브 웹툰 | 소요시간: 5분 미만</div>
+            </div>
+            <button class="ins-go-btn">세부 설계 뜯어보기 →</button>
+          </div>
+        </div>
+        
+        <div class="ins-card" id="card-2" onclick="openDetailPage(2)">
+          <div class="ins-main">
+            <div>
+              <div class="ins-title">중국 한나라 구장산술 산가지를 활용한 정수 덧셈의 역사적 배경</div>
+              <div style="font-size:10px; color:#64748B; margin-top:3px;">포맷: 멀티미디어 비디오 | 소요시간: 5분 미만</div>
+            </div>
+            <button class="ins-go-btn">세부 설계 뜯어보기 →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 오른쪽 디테일 패널 (세부 기획 및 수업 지도 시나리오 페이지) ── -->
+    <div class="detail-panel" id="detailPanel">
+      <div class="dt-header">
+        <div>
+          <span style="font-size:10px; background:#0891B2; color:#fff; padding:1px 4px; border-radius:3px; font-weight:700;">세부 설계서</span>
+          <div class="dt-title" id="dtTitle">자료를 선택해 주세요</div>
+        </div>
+        <button class="dt-close" onclick="closeDetailPage()">닫기 X</button>
+      </div>
+
+      <!-- 세부 메타 데이터 -->
+      <div class="dt-meta-grid">
+        <div class="dt-meta-item"><div class="dt-meta-lbl">추천 매칭 수업 순간</div><div class="dt-meta-val" id="dtMoment">-</div></div>
+        <div class="dt-meta-item"><div class="dt-meta-lbl">설계 의도 카테고리</div><div class="dt-meta-val" id="dtIntent">-</div></div>
+      </div>
+
+      <!-- 세부 기획 내부 탭 내비게이션 -->
+      <div class="dt-tabs">
+        <div class="dt-tab on" id="tab-flow" onclick="switchDetailTab('flow')">수업 흐름 시나리오</div>
+        <div class="dt-tab" id="tab-guide" onclick="switchDetailTab('guide')">현장 발문 & 교 가이드</div>
+        <div class="dt-tab" id="tab-error" onclick="switchDetailTab('error')">예상 오개념 방어선</div>
+      </div>
+
+      <!-- 가변 세부 콘텐츠 박스 -->
+      <div class="dt-content-box">
+        <div class="dt-section-title">📌 세부 맥락 가이드라인</div>
+        <div id="dtDynamicContent" style="font-size:11px; line-height:1.6; color:#334155;">
+          리스트에서 시나리오를 선택하면 실시간으로 연출안, 교사 가이드 발문 양식, 학생 오개념 대응 팁 세부 페이지가 매핑됩니다.
+        </div>
+      </div>
+
+      <!-- 수업 스튜디오 바인딩 액션 컨트롤러 (세부 조작) -->
+      <div class="dt-action-card">
+        <div style="font-size:11px; font-weight:700; color:#92400E;">🎯 내 수업 빌더(스튜디오)로 맞춤형 이관 세팅</div>
+        <div class="dt-flex-row">
+          <div>
+            <label style="font-size:10px; color:#6B7280;">목표 차시 배치:</label>
+            <select class="dt-select"><option>1차시 [도입부]</option><option>1차시 [전개부]</option><option>2차시 [복습용]</option></select>
+          </div>
+          <div>
+            <label style="font-size:10px; color:#6B7280;">가용 시간 조절:</label>
+            <select class="dt-select"><option>기본형 (3분)</option><option>심화토론형 (7분)</option></select>
+          </div>
+          <button class="dt-submit-btn" onclick="triggerBind()">이 시나리오로 스튜디오 담기</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">📥 세부 설정이 반영되어 '내 수업 스튜디오' 레이아웃 블록에 바인딩되었습니다.</div>
+
+<script>
+const DETAIL_DATA = {
+  1: {
+    title: "영하의 날씨와 통장 잔고로 이해하는 양수와 음수 직관 매칭",
+    moment: "도입 및 동기유발 (차시 시작 후 0~5분)",
+    intent: "실생활 연계 문항 / 감각적 인지 유도",
+    flow: "1. 한파 뉴스 화면을 보여주며 영상과 영하의 경계선(0도)을 인지시킵니다.<br>2. 용돈 기입장 예시를 통해 ' 번 돈(+)'과 '쓴 돈(-)'의 방향성을 매칭하여 기호의 필요성을 자극합니다.",
+    guide: "<strong>교사 추천 발문:</strong> '통장에 잔고가 하나도 없는데 물건을 더 사면 어떻게 표현할 수 있을까요? 0보다 더 작은 세상의 숫자에 대해 이야기해 봅시다.'",
+    error: "<strong>⚠️ 학생 필살 오개념:</strong> 부호 기호 '-'를 단순히 뺄셈 연산자로만 인지하는 경향이 있습니다. 여기서는 숫자의 상태와 '방향성'을 나타내는 성격임을 명확히 분리하여 지도해야 합니다."
+  },
+  2: {
+    title: "중국 한나라 구장산술 산가지를 활용한 정수 덧셈의 역사적 배경",
+    moment: "도입 및 동기유발 (역사 스토리텔링형)",
+    intent: "수학사 연계 / 인문학적 융합 설계",
+    flow: "1. 고대 중국에서 방정식을 풀 때 빨간색(양수)과 검은색(음수) 막대를 썼던 유래 비디오를 시청합니다.<br>2. 서로 다른 색의 막대가 만나면 상쇄되어 0이 되는 규칙성을 직관화합니다.",
+    guide: "<strong>교사 추천 발문:</strong> '플러스와 마이너스가 만나면 왜 사라질까요? 옛날 사람들은 이를 이익과 손해의 상쇄로 보았습니다. 우리 주변의 상쇄 현상을 찾아볼까요?'",
+    error: "<strong>⚠️ 학생 필살 오개념:</strong> 역사적 맥락에 너무 치우쳐 정작 수직선 좌표와의 매칭을 놓칠 수 있으므로, 스토리텔링 직후 반드시 수평 좌표선 격자로 환원해 주어야 합니다."
+  }
+};
+
+let currentSelectedId = null;
+
+function openDetailPage(id) {
+  currentSelectedId = id;
+  const data = DETAIL_DATA[id];
+  
+  // 액티브 스타일 클래스 제어
+  document.querySelectorAll('.ins-card').forEach(c => c.classList.remove('active-item'));
+  document.getElementById(`card-${id}`).classList.add('active-item');
+  
+  // 우측 패널 오픈 및 데이터 주입
+  document.getElementById('detailPanel').classList.add('open');
+  document.getElementById('dtTitle').innerText = data.title;
+  document.getElementById('dtMoment').innerText = data.moment;
+  document.getElementById('dtIntent').innerText = data.intent;
+  
+  switchDetailTab('flow');
+}
+
+function closeDetailPage() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.querySelectorAll('.ins-card').forEach(c => c.classList.remove('active-item'));
+}
+
+function switchDetailTab(tabType) {
+  if(!currentSelectedId) return;
+  const data = DETAIL_DATA[currentSelectedId];
+  
+  document.querySelectorAll('.dt-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById(`tab-${tabType}`).classList.add('on');
+  
+  const contentArea = document.getElementById('dtDynamicContent');
+  if(tabType === 'flow') {
+    contentArea.innerHTML = `<div class='dt-section-title'>🎬 추천 연출 흐름 (Flow)</div>` + data.flow;
+  } else if(tabType === 'guide') {
+    contentArea.innerHTML = `<div class='dt-section-title'>🗣️ 현장 실전 팁 & 발문 오디오 가이드</div>` + data.guide;
+  } else if(tabType === 'error') {
+    contentArea.innerHTML = `<div class='dt-section-title'>🛡️ 미리 치는 수학 오개념 방어망</div>` + data.error;
+  }
+}
+
+function triggerBind() {
+  const toast = document.getElementById('toast');
+  toast.classList.add('active');
+  setTimeout(() => toast.classList.remove('active'), 3000);
+}
+</script>
+</body>
+</html>
